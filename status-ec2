@@ -15,7 +15,7 @@ echo "
 To use this file with your EC2' user-data, simply add the below 2 lines into the ec2 user-data
 
 #!/bin/bash
-curl -H 'Cache-Control: no-cache, no-store' https://raw.githubusercontent.com/AdministratedAdmin/aws-ec2-server-install/refs/heads/main/dsa.sh | bash
+curl -H 'Cache-Control: no-cache, no-store' https://raw.githubusercontent.com/AdministratedAdmin/aws-ec2-server-install/refs/heads/main/status-ec2.sh | bash
 
 "
 yum update -y
@@ -33,7 +33,6 @@ chmod 2775 /var/www
 find /var/www -type d -exec chmod 2775 {} \;
 find /var/www -type f -exec chmod 0664 {} \;
 
-## update to use token on IMDSv2
 TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
 
 INSTANCE_INFO=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/dynamic/instance-identity/document)
@@ -56,7 +55,6 @@ cat <<EOF > /var/www/html/index.html
   <meta charset="UTF-8">
   <style>
     body {
-      background: url("https://www.antoniofeijao.com/assets/images/philipp-katzenberger-iIJrUoeRoCQ-unsplash.jpg") no-repeat center center fixed;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -100,7 +98,7 @@ cat <<EOF > /var/www/html/index.html
 </head>
 <body>
   <div class=centered>
-    <h1>Vou te lamber amanhã</h1>
+    <h1>Servidor EC2</h1>
     
     <h3 id="my-url"></h3>
 
@@ -132,4 +130,5 @@ cat <<EOF > /var/www/html/index.html
 </body>
 </html>
 EOF
+
 

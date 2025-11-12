@@ -15,7 +15,7 @@ echo "
 To use this file with your EC2' user-data, simply add the below 2 lines into the ec2 user-data
 
 #!/bin/bash
-curl -H 'Cache-Control: no-cache, no-store' https://github.com/AdministratedAdmin/aws-ec2-server-install/blob/main/dsa.sh | bash
+curl -H 'Cache-Control: no-cache, no-store' https://raw.githubusercontent.com/AdministratedAdmin/aws-ec2-server-install/refs/heads/main/dsa.sh | bash
 
 "
 yum update -y
@@ -132,3 +132,4 @@ cat <<EOF > /var/www/html/index.html
 </body>
 </html>
 EOF
+

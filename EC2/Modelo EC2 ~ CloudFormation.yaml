@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2025-12-15'
+Description: Modelo de instância EC2 para criação de pilhas no AWS CloudFormation
+
+Parameters:
+  KeyName:
+    Description: Nome de um par de chaves existentes para habilitar acesso atráves de SSH
+    Type: AWS::EC2::KeyPair::KeyName
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t3.micro
+      - t3.small
+    ConstraintDescription: Precisa ser um tipo de instância válido!
+  SSHLocation:
+    Description: Portas liberadas para acessar a conexão SSH
+    Type: String
+    MinLength: 9
+    MaxLength: 18
+    Default: 0.0.0.0/0
+    AllowedPattern: (^([0-9]{1,3}\.){3}[0-9]{1,3}\/[0-9]{1,2}$)
+    ConstraintDescription: O bloco CIDR precisa ser válido, usando o padrão x.x.x.x/x.
+
+Resources:
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Habilita o acesso SSH aravés da porta 22
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref SSHLocation
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SecurityGroups:
+        - !Ref EC2SecurityGroup
+      ImageId: ami-0c55b159cbfafe1f0 # Amazon Linux 2 AMI
+
+Outputs:
+  InstanceId:
+    Description: The Instance ID
+    Value: !Ref EC2Instance
+  PublicIP:
+    Description: IP público da instância EC2
+    Value: !GetAtt EC2Instance.PublicIp
